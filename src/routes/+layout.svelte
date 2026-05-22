@@ -3,6 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
 	import { onMount } from 'svelte';
+	import { ThemeToggle } from '$lib/features/theme-toggle';
 
 	interface Props {
 		children: Snippet;
@@ -30,4 +31,10 @@
 	{/if}
 </svelte:head>
 
-{@render children()}
+<div class="min-h-dvh">
+	<header class="mx-auto flex w-full max-w-5xl justify-end px-4 pt-4">
+		<ThemeToggle />
+	</header>
+
+	{@render children()}
+</div>
