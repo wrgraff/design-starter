@@ -61,6 +61,7 @@ pnpm exec playwright install chromium
 - `pnpm test` — Vitest
 - `pnpm test:e2e` — Playwright E2E suite
 - `pnpm test:a11y` — Playwright + axe-core
+- `pnpm test:a11y:full` — strict full-route accessibility suite
 - `pnpm test:all` — full suite
 - `pnpm tokens:check-contrast` — WCAG contrast checks for design tokens
 - `pnpm db:start` / `pnpm db:stop` — local Supabase

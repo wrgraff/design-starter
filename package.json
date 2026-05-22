@@ -21,6 +21,7 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"test:a11y": "playwright test --grep @a11y",
+		"test:a11y:full": "playwright test --grep @a11y-full",
 		"test:e2e": "playwright test",
 		"test:all": "pnpm test && pnpm test:e2e",
 		"db:start": "supabase start",

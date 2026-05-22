@@ -11,9 +11,6 @@ pre-commit:
     lint:
       glob: '*.{js,ts,svelte}'
       run: pnpm eslint --no-warn-ignored {staged_files}
-    types:
-      glob: '*.{ts,svelte}'
-      run: pnpm check
     forbidden-imports:
       glob: 'src/**/*.{ts,svelte}'
       run: |
@@ -40,6 +37,8 @@ commit-msg:
 pre-push:
   parallel: false
   commands:
+    types:
+      run: pnpm check
     test:
       run: pnpm test
     build:

@@ -135,6 +135,7 @@ If the design needs a value that does not exist in tokens, add a new token. See 
 ## Accessibility (Mandatory)
 
 - Target WCAG 2.1 AA as a minimum baseline.
+- Accessibility is a non-negotiable quality gate for this repository.
 - All interactive elements must be reachable by keyboard with a visible focus ring (`focus-visible` styles, not removed by CSS reset).
 - Interactive elements must have semantic HTML: `<button>` for actions, `<a href>` for navigation, never `<div onclick>`.
 - Every form input has an associated `<label for="...">` or `aria-label`.
@@ -143,7 +144,8 @@ If the design needs a value that does not exist in tokens, add a new token. See 
 - Color is never the only signal — pair color with text or icon.
 - Live regions (`aria-live`) for async status updates (toasts, validation, loading).
 - Text/background contrast ≥ 4.5:1 (≥ 3:1 for large text). The token system is calibrated for this — using tokens is enough.
-- Run `pnpm test:a11y` before opening a PR. Svelte's compile-time a11y warnings are treated as errors.
+- Any change that introduces or modifies UI/UX states (including forms, dialogs, validation, and loading/error states) must include or update a11y tests.
+- Run `pnpm test:a11y:full` and `pnpm tokens:check-contrast` before opening a PR. Svelte's compile-time a11y warnings are treated as errors.
 
 Forbidden:
 
@@ -285,11 +287,12 @@ tests/                          ← E2E tests
 - [ ] No hardcoded hex colors, magic spacing, custom fonts, or arbitrary Tailwind values in components.
 - [ ] All interactive elements are semantic HTML with visible focus styles.
 - [ ] All form inputs have labels; icon-only buttons have `aria-label`.
+- [ ] UI changes include updated/added a11y tests (`@a11y` / `@a11y-full`) for affected routes/components.
 - [ ] Dark theme works for everything you added.
 - [ ] Database changes are in `supabase/migrations/`, types regenerated, RLS in place.
 - [ ] Feature README is updated when its public API changes.
 - [ ] `docs/COMPONENTS.md` is updated when a primitive's contract changes.
-- [ ] `pnpm format && pnpm check && pnpm lint && pnpm test:all` passes.
+- [ ] `pnpm format && pnpm check && pnpm lint && pnpm test:all && pnpm test:a11y:full && pnpm tokens:check-contrast` passes.
 - [ ] No code or visual values copied from `prototypes/`.
 
 ## When Unsure
