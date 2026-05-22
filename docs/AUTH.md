@@ -5,7 +5,7 @@ Auth is an **optional module** in this template. Some projects need it, some do 
 > _Keep the optional auth module? (yes / no)_
 
 - **Yes** → the module stays, you configure providers, you get login/logout flows out of the box.
-- **No** → `pnpm init-project` removes the `src/lib/features/auth/`, `src/lib/auth/`, the `(auth)` route group, the auth-related env vars, and the auth-related Supabase migrations. The dependency list stays the same (Supabase is still used for the database).
+- **No** → `pnpm init-project` removes the `src/lib/features/auth/`, `src/lib/auth/`, the `(auth)` route group, and auth-related env vars/docs. The dependency list stays the same (Supabase is still used for the database).
 
 This document covers the module when it is kept.
 
@@ -41,11 +41,11 @@ If `pnpm init-project` removed the module and you later want it back:
 # Re-add it from the template (one-off):
 git remote add template <template-repo-url>
 git fetch template
-git checkout template/main -- src/lib/features/auth src/lib/auth src/routes/\(auth\) supabase/migrations/<timestamp>_auth_setup.sql
+git checkout template/main -- src/lib/features/auth src/lib/auth src/routes/\(auth\) docs/AUTH.md
 
 # Wire it up: add the env vars to .env.example and your .env
-# Re-run pnpm db:migrate to apply the auth migration
-# Re-run pnpm install if any deps were removed
+# Re-run pnpm db:migrate if your template version includes auth-specific migrations
+# Re-run pnpm install if deps changed between versions
 ```
 
 ## Configuration
@@ -78,7 +78,7 @@ Local development uses the same flow — Supabase local Studio (port 54323) has 
 
 ### Magic links and email
 
-For local development, magic link emails are visible in the local Inbucket mail UI at <http://127.0.0.1:54324>. No real email is sent.
+For local development, magic link emails are visible in the local Mailpit UI at <http://127.0.0.1:54324>. No real email is sent.
 
 For production, configure SMTP in Supabase Dashboard → Authentication → SMTP Settings. Recommended: Resend, Postmark, or AWS SES.
 
@@ -142,11 +142,12 @@ export const load = async ({ locals }) => ({ user: locals.user });
 
 ## Sign Out
 
-```ts
-import { supabase } from '$lib/supabase';
+Use the server form action so auth cookies are cleared on the server:
 
-await supabase.auth.signOut();
-// Triggers a redirect to /login via the server hook
+```svelte
+<form method="POST" action="/login?/signout">
+  <button type="submit">Sign out</button>
+</form>
 ```
 
 ## RLS and Auth
@@ -171,6 +172,6 @@ See [`DATABASE.md`](./DATABASE.md) for full RLS patterns.
 | Login redirect loop                                    | Check that `requireUser` isn't applied to `/login` itself.                                                                                                                                                       |
 | Magic link email never arrives in prod                 | SMTP not configured. Dashboard → Auth → SMTP.                                                                                                                                                                    |
 | `auth.uid()` returns null in a policy                  | The query was made with the anon key but without the user's session cookies. Make sure you're using `locals.supabase` (server) or the browser client (which carries cookies), not a manually constructed client. |
-| `ADMIN_EMAILS` change not picked up                    | Restart dev server — `$env/static/private` is read at startup.                                                                                                                                                   |
+| `ADMIN_EMAILS` change not picked up                    | Restart dev server after changing `.env`. The value is read from server env in the auth hook.                                                                                                                    |
 
 For Supabase Auth deep dives: <https://supabase.com/docs/guides/auth>.

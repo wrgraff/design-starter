@@ -46,7 +46,8 @@ This is the most important architectural rule of this repository.
   ```
   src/lib/features/<name>/
     README.md             ← feature contract (REQUIRED)
-    index.ts              ← single public entry point (REQUIRED)
+    index.ts              ← public entry point for client/shared code (REQUIRED)
+    index.server.ts       ← public entry point for server-only code (optional)
     <Component>.svelte    ← Svelte components
     <name>.state.svelte.ts ← runes-based state (if any)
     <name>.types.ts       ← feature-local types
@@ -54,7 +55,7 @@ This is the most important architectural rule of this repository.
     <name>.utils.ts       ← pure helpers (if any)
     <name>.test.ts        ← tests
   ```
-- Code outside the feature must import only from the feature's `index.ts`. Importing internals (`features/<name>/SomeInternalThing.svelte`) is forbidden.
+- Code outside the feature must import only from the feature's public entry points (`index.ts` and, for server files only, `index.server.ts`). Importing internals (`features/<name>/SomeInternalThing.svelte`) is forbidden.
 - A feature may depend on:
   - UI primitives from `$lib/components/ui/`
   - Icons from `$lib/icons/` or `@lucide/svelte`
@@ -220,7 +221,9 @@ Forbidden:
 | Format check                               | `pnpm format:check`            |
 | Unit/component tests                       | `pnpm test`                    |
 | A11y E2E tests                             | `pnpm test:a11y`               |
+| Full A11y suite                            | `pnpm test:a11y:full`          |
 | All tests                                  | `pnpm test:all`                |
+| Token contrast checks                      | `pnpm tokens:check-contrast`   |
 | Build                                      | `pnpm build`                   |
 | Preview build                              | `pnpm preview`                 |
 | Start local Supabase                       | `pnpm db:start`                |
@@ -230,7 +233,12 @@ Forbidden:
 | Reset local DB                             | `pnpm db:reset`                |
 | Regenerate DB types                        | `pnpm db:types`                |
 
-Always run before committing: `pnpm format && pnpm check && pnpm lint && pnpm test`. Lefthook does this automatically. Do not bypass with `--no-verify` unless explicitly asked.
+Lefthook gates are split intentionally:
+
+- On `pre-commit`: formatting/lint/import guard.
+- On `pre-push`: `pnpm check`, `pnpm test`, `pnpm build`.
+
+Always run the full quality gate before opening a PR. Do not bypass hooks with `--no-verify` unless explicitly asked.
 
 ## Project Structure
 

@@ -311,7 +311,7 @@ The right path when you find yourself building a UI pattern that recurs.
 2. Add the file to `src/lib/components/ui/<Name>.svelte`.
 3. Export it from `src/lib/components/ui/index.ts`.
 4. Add a contract entry to this file (`COMPONENTS.md`) following the format above.
-5. Add `vitest-axe` component tests in `<Name>.test.ts`.
+5. Add component behavior tests in `<Name>.test.ts` and extend route/state a11y coverage in Playwright where relevant.
 6. Use only design tokens. No hardcoded colors, spacings, fonts.
 
 Once it exists, features should prefer it over building their own version.

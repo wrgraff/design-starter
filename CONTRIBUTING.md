@@ -9,7 +9,7 @@ This repository is primarily developed by delegating tasks to AI agents (Claude 
 3. No hardcoded visual values. Tokens only — see [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md).
 4. A11y baseline is mandatory — see [`docs/A11Y.md`](./docs/A11Y.md).
 5. Database changes via migrations only — see [`docs/DATABASE.md`](./docs/DATABASE.md).
-6. Run `pnpm format && pnpm check && pnpm lint && pnpm test` before pushing. Lefthook does this on commit/push automatically.
+6. Before PR: run `pnpm format:check && pnpm check && pnpm lint && pnpm test && pnpm test:a11y:full && pnpm tokens:check-contrast`. Lefthook additionally enforces commit/push gates automatically.
 
 ## Commit messages
 

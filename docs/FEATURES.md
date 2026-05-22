@@ -19,7 +19,8 @@ A feature folder is a **firewall**:
 ```
 src/lib/features/<name>/
   README.md                  ← contract: what this feature does, its public API
-  index.ts                   ← single public entry point
+  index.ts                   ← public entry point for client/shared code
+  index.server.ts            ← public entry point for server-only code (optional)
   <Component>.svelte         ← one or more Svelte components
   <name>.state.svelte.ts     ← runes-based state (optional)
   <name>.server.ts           ← server-only code (optional)
@@ -32,7 +33,10 @@ The folder name is `kebab-case`. Component files are `PascalCase.svelte`. Everyt
 
 ## Public Surface
 
-The only file other code may import from is `index.ts`.
+The only files other code may import from are:
+
+- `index.ts` (client/shared imports)
+- `index.server.ts` (server-only imports from `+page.server.ts` / `+server.ts` / server modules)
 
 Good:
 
@@ -49,6 +53,8 @@ import { sortSongs } from '$lib/features/song-list/song-list.utils'; // internal
 ```
 
 If something must be importable from outside, export it from `index.ts`. If it should not be importable from outside, do not export it. This is how the firewall works.
+
+For server-only helpers, export from `index.server.ts` and import only from server contexts.
 
 ## What May a Feature Depend On
 
