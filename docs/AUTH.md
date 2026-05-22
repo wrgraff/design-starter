@@ -142,10 +142,12 @@ export const load = async ({ locals }) => ({ user: locals.user });
 
 ## Sign Out
 
-Use the server form action so auth cookies are cleared on the server:
+The sign-out endpoint lives at `src/routes/signout/+server.ts`. It is a standalone `POST` handler — not part of the `(auth)` route group — so it is reachable from any layout or page in the app, including ones outside the auth flow.
+
+Use a plain form `POST` to `/signout` so auth cookies are cleared on the server:
 
 ```svelte
-<form method="POST" action="/login?/signout">
+<form method="POST" action="/signout">
   <button type="submit">Sign out</button>
 </form>
 ```
@@ -168,7 +170,7 @@ See [`DATABASE.md`](./DATABASE.md) for full RLS patterns.
 
 | Mistake                                                | Fix                                                                                                                                                                                                              |
 | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Calling `supabase.auth.signOut()` but session persists | Use the SvelteKit form action `?/signout`, which clears cookies on the server.                                                                                                                                   |
+| Calling `supabase.auth.signOut()` but session persists | Use the `/signout` POST endpoint (`src/routes/signout/+server.ts`), which clears cookies on the server. A `<form method="POST" action="/signout">` is the correct pattern.                                       |
 | Login redirect loop                                    | Check that `requireUser` isn't applied to `/login` itself.                                                                                                                                                       |
 | Magic link email never arrives in prod                 | SMTP not configured. Dashboard → Auth → SMTP.                                                                                                                                                                    |
 | `auth.uid()` returns null in a policy                  | The query was made with the anon key but without the user's session cookies. Make sure you're using `locals.supabase` (server) or the browser client (which carries cookies), not a manually constructed client. |
