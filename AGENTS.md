@@ -130,7 +130,7 @@ Forbidden:
 - Importing colors/sizes/fonts from `tailwindcss/colors` or any other framework default palette
 - Modifying tokens inside feature files — only `src/app.css` defines tokens
 
-If the design needs a value that does not exist in tokens, add a new token. See `docs/DESIGN-SYSTEM.md` → *Adding a token*.
+If the design needs a value that does not exist in tokens, add a new token. See `docs/DESIGN-SYSTEM.md` → _Adding a token_.
 
 ## Accessibility (Mandatory)
 
@@ -207,26 +207,26 @@ Forbidden:
 
 ## Commands
 
-| Task | Command |
-|---|---|
-| Install deps | `pnpm install` |
-| Initialize this template for a new project | `pnpm init-project` |
-| Dev server | `pnpm dev` |
-| Type-check + a11y compile checks | `pnpm check` |
-| Lint | `pnpm lint` |
-| Format (write) | `pnpm format` |
-| Format check | `pnpm format:check` |
-| Unit/component tests | `pnpm test` |
-| A11y E2E tests | `pnpm test:a11y` |
-| All tests | `pnpm test:all` |
-| Build | `pnpm build` |
-| Preview build | `pnpm preview` |
-| Start local Supabase | `pnpm db:start` |
-| Stop local Supabase | `pnpm db:stop` |
-| New migration | `pnpm db:migration:new <name>` |
-| Apply migrations | `pnpm db:migrate` |
-| Reset local DB | `pnpm db:reset` |
-| Regenerate DB types | `pnpm db:types` |
+| Task                                       | Command                        |
+| ------------------------------------------ | ------------------------------ |
+| Install deps                               | `pnpm install`                 |
+| Initialize this template for a new project | `pnpm init-project`            |
+| Dev server                                 | `pnpm dev`                     |
+| Type-check + a11y compile checks           | `pnpm check`                   |
+| Lint                                       | `pnpm lint`                    |
+| Format (write)                             | `pnpm format`                  |
+| Format check                               | `pnpm format:check`            |
+| Unit/component tests                       | `pnpm test`                    |
+| A11y E2E tests                             | `pnpm test:a11y`               |
+| All tests                                  | `pnpm test:all`                |
+| Build                                      | `pnpm build`                   |
+| Preview build                              | `pnpm preview`                 |
+| Start local Supabase                       | `pnpm db:start`                |
+| Stop local Supabase                        | `pnpm db:stop`                 |
+| New migration                              | `pnpm db:migration:new <name>` |
+| Apply migrations                           | `pnpm db:migrate`              |
+| Reset local DB                             | `pnpm db:reset`                |
+| Regenerate DB types                        | `pnpm db:types`                |
 
 Always run before committing: `pnpm format && pnpm check && pnpm lint && pnpm test`. Lefthook does this automatically. Do not bypass with `--no-verify` unless explicitly asked.
 

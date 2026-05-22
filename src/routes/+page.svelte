@@ -1,0 +1,56 @@
+<script lang="ts">
+	import { Button, Card, Input, Label, Dialog } from '$lib/components/ui';
+
+	let dialogOpen = $state(false);
+	let name = $state('');
+</script>
+
+<svelte:head>
+	<title>design-starter</title>
+	<meta name="description" content="design-starter template — fresh install" />
+</svelte:head>
+
+<main class="mx-auto max-w-2xl space-y-8 p-6">
+	<header class="space-y-2">
+		<h1 class="text-3xl font-semibold tracking-tight">design-starter</h1>
+		<p class="text-muted-foreground text-sm">
+			Fresh install. Replace this with your actual landing page or first feature. See <code
+				class="bg-muted rounded px-1.5 py-0.5 text-xs">AGENTS.md</code
+			>
+			and
+			<code class="bg-muted rounded px-1.5 py-0.5 text-xs">docs/</code> for what to do next.
+		</p>
+	</header>
+
+	<Card class="space-y-4 p-6">
+		<div>
+			<h2 class="text-lg font-medium">Primitive smoke test</h2>
+			<p class="text-muted-foreground text-sm">
+				If the styling here looks right in both light and dark mode, the design system is wired up.
+			</p>
+		</div>
+
+		<div class="space-y-2">
+			<Label for="name">Name</Label>
+			<Input id="name" bind:value={name} placeholder="Type something" />
+		</div>
+
+		<div class="flex flex-wrap gap-2">
+			<Button onclick={() => (dialogOpen = true)}>Open dialog</Button>
+			<Button variant="secondary">Secondary</Button>
+			<Button variant="outline">Outline</Button>
+			<Button variant="ghost">Ghost</Button>
+			<Button variant="destructive">Destructive</Button>
+		</div>
+	</Card>
+
+	<Dialog bind:open={dialogOpen} title="Hello" description="This is a smoke-test dialog.">
+		<p class="text-sm">
+			If you can see this, focus is trapped here, ESC closes it, and the design tokens render.
+		</p>
+		{#snippet footer()}
+			<Button variant="outline" onclick={() => (dialogOpen = false)}>Cancel</Button>
+			<Button onclick={() => (dialogOpen = false)}>OK</Button>
+		{/snippet}
+	</Dialog>
+</main>

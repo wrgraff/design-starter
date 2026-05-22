@@ -1,0 +1,187 @@
+@import 'tailwindcss';
+
+/* ───────────────────────────────────────────────────────────────────
+   Dark mode variant — activated by .dark class on <html>
+   See DESIGN-SYSTEM.md → Dark Theme.
+   ─────────────────────────────────────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────────────────────────────────────────────────
+   Design tokens — light theme (defaults).
+   These map automatically to Tailwind utilities:
+     bg-background, text-foreground, bg-primary, ring-ring, etc.
+   See DESIGN-SYSTEM.md for the full table and how to extend.
+   ─────────────────────────────────────────────────────────────────── */
+@theme {
+	/* Colors — neutral grayscale as default base.
+	   pnpm init-project overrides --color-primary with the brand color. */
+
+	--color-background: oklch(1 0 0);
+	--color-foreground: oklch(0.145 0 0);
+
+	--color-card: oklch(1 0 0);
+	--color-card-foreground: oklch(0.145 0 0);
+
+	--color-popover: oklch(1 0 0);
+	--color-popover-foreground: oklch(0.145 0 0);
+
+	--color-primary: oklch(0.205 0 0);
+	--color-primary-foreground: oklch(0.985 0 0);
+
+	--color-secondary: oklch(0.97 0 0);
+	--color-secondary-foreground: oklch(0.205 0 0);
+
+	--color-muted: oklch(0.97 0 0);
+	--color-muted-foreground: oklch(0.556 0 0);
+
+	--color-accent: oklch(0.97 0 0);
+	--color-accent-foreground: oklch(0.205 0 0);
+
+	--color-destructive: oklch(0.577 0.245 27.325);
+	--color-destructive-foreground: oklch(0.985 0 0);
+
+	--color-success: oklch(0.65 0.17 142);
+	--color-success-foreground: oklch(0.985 0 0);
+
+	--color-warning: oklch(0.78 0.16 80);
+	--color-warning-foreground: oklch(0.145 0 0);
+
+	--color-info: oklch(0.65 0.16 240);
+	--color-info-foreground: oklch(0.985 0 0);
+
+	--color-border: oklch(0.922 0 0);
+	--color-input: oklch(0.922 0 0);
+	--color-ring: oklch(0.708 0 0);
+
+	/* Typography */
+	--font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-mono:
+		'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+	/* Radii */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.375rem;
+	--radius-lg: 0.5rem;
+	--radius-xl: 0.75rem;
+	--radius-2xl: 1rem;
+	--radius-full: 9999px;
+
+	/* Shadows — subtle by default */
+	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+	/* Motion */
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   Dark theme — same token names, different values.
+   Activated by .dark on <html>.
+   ─────────────────────────────────────────────────────────────────── */
+.dark {
+	--color-background: oklch(0.145 0 0);
+	--color-foreground: oklch(0.985 0 0);
+
+	--color-card: oklch(0.205 0 0);
+	--color-card-foreground: oklch(0.985 0 0);
+
+	--color-popover: oklch(0.205 0 0);
+	--color-popover-foreground: oklch(0.985 0 0);
+
+	--color-primary: oklch(0.985 0 0);
+	--color-primary-foreground: oklch(0.205 0 0);
+
+	--color-secondary: oklch(0.269 0 0);
+	--color-secondary-foreground: oklch(0.985 0 0);
+
+	--color-muted: oklch(0.269 0 0);
+	--color-muted-foreground: oklch(0.708 0 0);
+
+	--color-accent: oklch(0.269 0 0);
+	--color-accent-foreground: oklch(0.985 0 0);
+
+	--color-destructive: oklch(0.704 0.191 22.216);
+	--color-destructive-foreground: oklch(0.985 0 0);
+
+	--color-success: oklch(0.72 0.18 142);
+	--color-success-foreground: oklch(0.145 0 0);
+
+	--color-warning: oklch(0.82 0.17 80);
+	--color-warning-foreground: oklch(0.145 0 0);
+
+	--color-info: oklch(0.72 0.17 240);
+	--color-info-foreground: oklch(0.145 0 0);
+
+	--color-border: oklch(1 0 0 / 0.1);
+	--color-input: oklch(1 0 0 / 0.15);
+	--color-ring: oklch(0.556 0 0);
+
+	/* Softer shadows in dark mode — light source contrast is lower */
+	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   Base styles
+   ─────────────────────────────────────────────────────────────────── */
+@layer base {
+	*,
+	*::before,
+	*::after {
+		border-color: var(--color-border);
+	}
+
+	html {
+		font-family: var(--font-sans);
+		font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+		-webkit-text-size-adjust: 100%;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	body {
+		background-color: var(--color-background);
+		color: var(--color-foreground);
+		font-feature-settings:
+			'rlig' 1,
+			'calt' 1;
+		min-height: 100dvh;
+	}
+
+	/* Visible focus indicator across all interactive elements.
+	   Individual primitives override with token-driven ring. */
+	:focus-visible {
+		outline: 2px solid var(--color-ring);
+		outline-offset: 2px;
+	}
+
+	/* Native dialog backdrop */
+	dialog::backdrop {
+		background-color: oklch(0 0 0 / 0.5);
+		backdrop-filter: blur(4px);
+	}
+
+	/* Selection */
+	::selection {
+		background-color: var(--color-primary);
+		color: var(--color-primary-foreground);
+	}
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   Reduced motion — respect the user's OS preference globally.
+   ─────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

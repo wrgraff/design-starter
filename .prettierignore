@@ -1,0 +1,27 @@
+# Build outputs
+.svelte-kit
+build
+dist
+
+# Dependencies
+node_modules
+pnpm-lock.yaml
+
+# Coverage
+coverage
+
+# Generated
+src/lib/types/database.types.ts
+
+# Prototypes — not part of the project source
+prototypes/
+
+# Supabase local state
+supabase/.branches
+supabase/.temp
+
+# Misc
+.env
+.env.*
+.netlify
+.vercel

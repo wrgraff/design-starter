@@ -1,0 +1,45 @@
+# Netlify config
+# Docs: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  command = "pnpm build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  PNPM_VERSION = "9"
+  # SECRETS_SCAN_OMIT_KEYS can be added here per-project if Netlify flags
+  # any public env vars (e.g. PUBLIC_SUPABASE_URL) as secrets in build output.
+
+[functions]
+  # SvelteKit Netlify adapter writes functions here automatically
+  node_bundler = "esbuild"
+
+# Cache static assets aggressively; SvelteKit handles hashed filenames
+[[headers]]
+  for = "/_app/immutable/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# PWA assets
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Security headers — adjust CSP per project as needed
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# SPA-style fallback is handled by SvelteKit; no [[redirects]] needed by default

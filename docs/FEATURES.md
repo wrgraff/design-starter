@@ -44,8 +44,8 @@ import type { Song } from '$lib/features/song-list';
 Forbidden:
 
 ```ts
-import SongRow from '$lib/features/song-list/SongRow.svelte';            // internal
-import { sortSongs } from '$lib/features/song-list/song-list.utils';     // internal
+import SongRow from '$lib/features/song-list/SongRow.svelte'; // internal
+import { sortSongs } from '$lib/features/song-list/song-list.utils'; // internal
 ```
 
 If something must be importable from outside, export it from `index.ts`. If it should not be importable from outside, do not export it. This is how the firewall works.
@@ -150,7 +150,7 @@ If it grows past these, consider splitting. Two small features that talk via cle
 
 ## Naming
 
-- Folder name describes *what* the feature is in the user's language, not how it is implemented.
+- Folder name describes _what_ the feature is in the user's language, not how it is implemented.
   - Good: `song-list`, `signup`, `profile-editor`, `transcribe-button`.
   - Bad: `use-songs-hook`, `song-fetcher`, `auth-helper`, `with-modal`.
 - Prefer noun phrases (`profile-editor`) over verb phrases (`edit-profile`) — features describe things, not actions.
@@ -164,7 +164,7 @@ Because of the firewall, rewriting is straightforward:
 2. Read the tests. They are the executable contract.
 3. Delete everything in the folder except `README.md`.
 4. Rewrite. The tests are the acceptance criteria.
-5. Update `README.md` only if the public API genuinely needs to change. If it does, you also update all importers in the same task (see `AGENTS.md` → *Legacy Policy*).
+5. Update `README.md` only if the public API genuinely needs to change. If it does, you also update all importers in the same task (see `AGENTS.md` → _Legacy Policy_).
 
 A prompt that works well for an agent:
 
@@ -179,4 +179,4 @@ A prompt that works well for an agent:
 - Icons — in `src/lib/icons/`.
 - Layout shells, page routing — in `src/routes/`.
 
-The distinction: if a thing has *no business meaning on its own* and is reusable across features, it is infrastructure (`components/ui`, `utils`, `types`, `server`). If a thing represents *a slice of what the app does for the user*, it is a feature.
+The distinction: if a thing has _no business meaning on its own_ and is reusable across features, it is infrastructure (`components/ui`, `utils`, `types`, `server`). If a thing represents _a slice of what the app does for the user_, it is a feature.
