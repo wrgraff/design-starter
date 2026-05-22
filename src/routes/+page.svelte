@@ -1,5 +1,12 @@
 <script lang="ts">
 	import { Button, Card, Input, Label, Dialog } from '$lib/components/ui';
+	import type { PageData } from './$types';
+
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	let dialogOpen = $state(false);
 	let name = $state('');
@@ -35,6 +42,37 @@
 				Open Notes feature
 			</a>
 		</div>
+	</Card>
+
+	<Card class="space-y-3 p-6">
+		<h2 class="text-lg font-medium">Auth smoke test</h2>
+		{#if data.user}
+			<p class="text-sm">
+				Logged in as <span class="font-medium">{data.user.email}</span>
+				{#if data.user.isAdmin}
+					<span class="text-muted-foreground">(admin)</span>
+				{/if}
+			</p>
+			<form method="POST" action="/login?/signout">
+				<Button type="submit" variant="outline">Logout</Button>
+			</form>
+		{:else}
+			<p class="text-muted-foreground text-sm">You are currently logged out.</p>
+			<div class="flex flex-wrap gap-2">
+				<a
+					href="/login"
+					class="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				>
+					Login
+				</a>
+				<a
+					href="/signup"
+					class="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				>
+					Sign up
+				</a>
+			</div>
+		{/if}
 	</Card>
 
 	<Card class="space-y-4 p-6">

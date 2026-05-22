@@ -1,6 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { env } from '$env/dynamic/private';
+import { assignAdminRole, parseAdminEmails } from '$lib/auth';
 import { createSupabaseServerClient } from '$lib/server/supabase';
+
+const adminEmails = parseAdminEmails(env.ADMIN_EMAILS);
 
 /**
  * Attach a per-request Supabase client and a safe session helper to
@@ -62,7 +66,7 @@ const supabase: Handle = async ({ event, resolve }) => {
 const session: Handle = async ({ event, resolve }) => {
 	const { session, user } = await event.locals.safeGetSession();
 	event.locals.session = session;
-	event.locals.user = user;
+	event.locals.user = assignAdminRole(user, adminEmails);
 	return resolve(event);
 };
 
