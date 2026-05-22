@@ -22,6 +22,21 @@
 		</p>
 	</header>
 
+	<Card class="space-y-3 p-6">
+		<h2 class="text-lg font-medium">Feature demos</h2>
+		<p class="text-muted-foreground text-sm">
+			Use this section to open isolated feature examples while building the template.
+		</p>
+		<div class="flex flex-wrap gap-2">
+			<a
+				href="/notes"
+				class="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+			>
+				Open Notes feature
+			</a>
+		</div>
+	</Card>
+
 	<Card class="space-y-4 p-6">
 		<div>
 			<h2 class="text-lg font-medium">Primitive smoke test</h2>
