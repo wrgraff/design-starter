@@ -57,28 +57,25 @@ A SvelteKit + Supabase + PWA template built for **AI-agent-driven development**.
   - `src/lib/components/ui/`: `Button`, `Input`, `Textarea`, `Label`, `Card`, `Dialog` + `index.ts`
 - **Routes**: `src/routes/+layout.svelte` (imports app.css, registers SW), `src/routes/+layout.server.ts` (surfaces session/user), `src/routes/+page.svelte` (smoke test of primitives)
 - **Static**: `static/favicon.svg`, `static/icons/README.md` (placeholder notes)
-- **Tests**: `tests/setup.ts`
+- **Tests**: `tests/setup.ts`, Playwright E2E + axe (`tests/e2e/*`)
 
-### To Do
+### Completed In This Cycle
 
-See [`docs/HANDOFF.md`](./docs/HANDOFF.md) for the prioritized, detailed task list.
-
-High-level remaining work:
-
-1. **Example feature `notes`** — full CRUD with Supabase (migration + RLS + feature folder with README, components, server, state, tests). Acts as the canonical reference for the feature pattern.
-2. **Example feature `theme-toggle`** — small UI-only feature managing the light/dark/system preference, syncing with the `<head>` script.
-3. **Optional auth module** — `src/lib/auth/`, `src/lib/features/auth/`, `(auth)` route group, magic-link + Google, `requireUser()` helper.
-4. **`scripts/init-project.mjs`** — interactive initializer (renames, brand color, removes auth if not wanted).
-5. **`scripts/check-contrast.mjs`** — token contrast verifier.
-6. **GitHub Actions CI** — `.github/workflows/ci.yml` running lint + check + test + build on PRs.
-7. **PWA icons** — generate `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` placeholders.
-8. **Playwright + axe-core scaffolding** — `playwright.config.ts`, one example a11y test.
-9. **`supabase/config.toml`** + initial migration + RLS for `notes`.
-10. **README polish** — once everything works, capture screenshots + verify quick-start instructions end-to-end.
+1. **Build verification** — `check/lint/build` fixed and green.
+2. **PWA icons** — generated and wired.
+3. **Supabase setup** — `supabase/config.toml`, initial `notes` migration, generated DB types.
+4. **Feature `notes`** — isolated CRUD feature + route integration + tests.
+5. **Feature `theme-toggle`** — isolated feature with persisted preference and route-level integration.
+6. **Optional auth module** — login/signup/magic-link/OAuth callback routes + server actions + admin role wiring.
+7. **`init-project` script** — interactive initializer with optional auth removal and token/manifest updates.
+8. **Token contrast script** — `scripts/check-contrast.mjs` + `scripts/contrast-pairs.json`.
+9. **Playwright + axe** — `playwright.config.ts`, smoke test, a11y test.
+10. **CI workflow** — `.github/workflows/ci.yml` with quality + e2e jobs.
+11. **README polish + final verification** — scripts/docs aligned to current behavior.
 
 ## How to Continue
 
-Open the repo in Claude Code (or Cursor / Aider / similar) and point it at [`docs/HANDOFF.md`](./docs/HANDOFF.md). That file is written specifically for the next agent session.
+Open the repo in Claude Code (or Cursor / Aider / similar) and point it at [`docs/HANDOFF.md`](./docs/HANDOFF.md). That file remains the handoff playbook for future template iterations.
 
 For human reference:
 

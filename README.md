@@ -44,6 +44,12 @@ pnpm db:types              # generate TS types
 pnpm dev                   # http://localhost:5173
 ```
 
+For Playwright E2E/a11y runs (first time on a machine), install browsers once:
+
+```bash
+pnpm exec playwright install chromium
+```
+
 ## Scripts
 
 - `pnpm dev` — local dev server
@@ -53,8 +59,10 @@ pnpm dev                   # http://localhost:5173
 - `pnpm lint` — ESLint
 - `pnpm format` — Prettier write
 - `pnpm test` — Vitest
+- `pnpm test:e2e` — Playwright E2E suite
 - `pnpm test:a11y` — Playwright + axe-core
 - `pnpm test:all` — full suite
+- `pnpm tokens:check-contrast` — WCAG contrast checks for design tokens
 - `pnpm db:start` / `pnpm db:stop` — local Supabase
 - `pnpm db:migration:new <name>` — new migration
 - `pnpm db:migrate` — apply migrations
@@ -85,7 +93,7 @@ To start a new project from this template:
 pnpm init-project
 ```
 
-It asks: project name, description, repo URL, whether to keep the optional auth module, local vs remote Supabase, and a base brand color. Then it replaces placeholders across the repo, installs deps, and prints the next steps.
+It asks: project name, description, repo URL, whether to keep the optional auth module, local vs remote Supabase, and a base brand color. Then it replaces placeholders across the repo and prints the next steps.
 
 See [`docs/`](./docs) for the full picture.
 
