@@ -20,7 +20,7 @@ A feature folder is a **firewall**:
 src/lib/features/<name>/
   README.md                  ← contract: what this feature does, its public API
   index.ts                   ← public entry point for client/shared code
-  index.server.ts            ← public entry point for server-only code (optional)
+  index.server.ts            ← public entry point for server-only code (required when the feature has server code)
   <Component>.svelte         ← one or more Svelte components
   <name>.state.svelte.ts     ← runes-based state (optional)
   <name>.server.ts           ← server-only code (optional)
@@ -54,7 +54,7 @@ import { sortSongs } from '$lib/features/song-list/song-list.utils'; // internal
 
 If something must be importable from outside, export it from `index.ts`. If it should not be importable from outside, do not export it. This is how the firewall works.
 
-For server-only helpers, export from `index.server.ts` and import only from server contexts.
+For server-only helpers, export from `index.server.ts` and import **only from server contexts** (`+page.server.ts`, `+server.ts`, `*.server.ts`). `index.server.ts` is **required whenever the feature has any server-side code** — not optional. SvelteKit enforces the `.server` naming convention at compile time: if server-only code (e.g. service-role Supabase client, secret env vars) is imported without the `.server` suffix, it will leak into the browser bundle and cause a build error. Making `index.server.ts` the explicit boundary turns that runtime risk into a compile-time check.
 
 ## What May a Feature Depend On
 

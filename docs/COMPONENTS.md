@@ -52,8 +52,18 @@ A clickable action. Use for things that _do something_. For navigation, use `<a 
 
 ### Constraints
 
-- Do not use a `<Button>` for navigation. Use `<a href>`.
+- Do not use a `<Button>` for navigation. Use `<LinkButton href>` or a plain `<a>`.
 - Do not nest interactive elements inside `<Button>`.
+
+### Utility: `buttonClasses()`
+
+```ts
+import { buttonClasses } from '$lib/components/ui';
+
+buttonClasses({ variant?: ButtonVariant; size?: ButtonSize; class?: string }): string
+```
+
+Returns the full class string for a button-styled element. Use this when you need button styling on a non-`<button>` element (e.g. inside `<LinkButton>`). Prefer `<Button>` or `<LinkButton>` in markup — only call `buttonClasses()` directly when neither fits.
 
 ### A11y
 
@@ -62,6 +72,40 @@ A clickable action. Use for things that _do something_. For navigation, use `<a 
 - `aria-busy` while loading.
 - Disabled state is announced as `disabled` (native attribute, not `aria-disabled`).
 - Icon-only buttons require `aria-label` — flagged at compile time by `svelte-check`.
+
+---
+
+## LinkButton
+
+`$lib/components/ui/LinkButton.svelte`
+
+A navigation link styled as a button. Use for things that _go somewhere_. For actions, use `<Button>`.
+
+### Inputs
+
+| Prop                  | Type                                                                          | Default     | Notes                               |
+| --------------------- | ----------------------------------------------------------------------------- | ----------- | ----------------------------------- |
+| `href`                | `string`                                                                      | —           | **Required.** The destination URL.  |
+| `variant`             | `'default' \| 'secondary' \| 'destructive' \| 'outline' \| 'ghost' \| 'link'` | `'default'` | Visual style — same as `<Button>`.  |
+| `size`                | `'sm' \| 'md' \| 'lg' \| 'icon'`                                              | `'md'`      | Same as `<Button>`.                 |
+| `class`               | `string`                                                                      | —           | Caller utility classes.             |
+| `children`            | `Snippet`                                                                     | —           | Link label.                         |
+| Other DOM `<a>` attrs | —                                                                             | —           | `target`, `rel`, `aria-label`, etc. |
+
+### Behavior
+
+- Renders a semantic `<a href>` element with full button visual styling via `buttonClasses()`.
+- Inherits all `variant` and `size` options from `Button`.
+
+### Constraints
+
+- Do not use `<LinkButton>` for actions that submit forms or trigger side effects — use `<Button type="submit">`.
+- Do not use `href="#"` or `href="javascript:void(0)"` — those are actions, not navigation.
+
+### A11y
+
+- Native `<a>` element — announced as a link by screen readers.
+- Visible `focus-visible` ring matching `<Button>`.
 
 ---
 

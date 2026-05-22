@@ -25,13 +25,36 @@
 		lg: 'h-10 rounded-md px-6 text-base',
 		icon: 'h-9 w-9'
 	};
+
+	import { cn } from '$lib/utils/cn';
+
+	export interface ButtonStyleProps {
+		variant?: ButtonVariant;
+		size?: ButtonSize;
+		class?: string;
+	}
+
+	export function buttonClasses({
+		variant = 'default',
+		size = 'md',
+		class: className
+	}: ButtonStyleProps = {}): string {
+		return cn(
+			'inline-flex items-center justify-center gap-2 rounded-md font-medium',
+			'focus-visible:ring-ring transition-colors focus-visible:ring-2 focus-visible:ring-offset-2',
+			'focus-visible:ring-offset-background focus-visible:outline-none',
+			'disabled:pointer-events-none disabled:opacity-50',
+			buttonVariants[variant],
+			buttonSizes[size],
+			className
+		);
+	}
 </script>
 
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
 	import { Loader2 } from '@lucide/svelte';
-	import { cn } from '$lib/utils/cn';
 
 	interface Props extends Omit<HTMLButtonAttributes, 'class'> {
 		variant?: ButtonVariant;
@@ -57,15 +80,7 @@
 	{type}
 	disabled={disabled || loading}
 	aria-busy={loading || undefined}
-	class={cn(
-		'inline-flex items-center justify-center gap-2 rounded-md font-medium',
-		'focus-visible:ring-ring transition-colors focus-visible:ring-2 focus-visible:ring-offset-2',
-		'focus-visible:ring-offset-background focus-visible:outline-none',
-		'disabled:pointer-events-none disabled:opacity-50',
-		buttonVariants[variant],
-		buttonSizes[size],
-		className
-	)}
+	class={buttonClasses({ variant, size, class: className })}
 	{...rest}
 >
 	{#if loading}

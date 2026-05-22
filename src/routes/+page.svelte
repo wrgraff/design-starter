@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Card, Input, Label, Dialog } from '$lib/components/ui';
+	import { Button, Card, Input, Label, Dialog, LinkButton } from '$lib/components/ui';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -36,12 +36,7 @@
 			Use this section to open isolated feature examples while building the template.
 		</p>
 		<div class="flex flex-wrap gap-2">
-			<a
-				href="/notes"
-				class="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-			>
-				Open Notes feature
-			</a>
+			<LinkButton href="/notes" variant="outline">Open Notes feature</LinkButton>
 		</div>
 	</Card>
 
@@ -54,24 +49,14 @@
 					<span class="text-muted-foreground">(admin)</span>
 				{/if}
 			</p>
-			<form method="POST" action="/login?/signout">
+			<form method="POST" action="/signout">
 				<Button type="submit" variant="outline">Logout</Button>
 			</form>
 		{:else}
 			<p class="text-muted-foreground text-sm">You are currently logged out.</p>
 			<div class="flex flex-wrap gap-2">
-				<a
-					href="/login"
-					class="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-				>
-					Login
-				</a>
-				<a
-					href="/signup"
-					class="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-				>
-					Sign up
-				</a>
+				<LinkButton href="/login" variant="outline">Login</LinkButton>
+				<LinkButton href="/signup" variant="outline">Sign up</LinkButton>
 			</div>
 		{/if}
 	</Card>

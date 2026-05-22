@@ -5,7 +5,6 @@ import {
 	readNextFromFormData,
 	readNextFromUrl,
 	requestMagicLink,
-	signOut,
 	startOAuth
 } from '$lib/features/auth/index.server';
 import type { Actions, PageServerLoad } from './$types';
@@ -89,10 +88,5 @@ export const actions: Actions = {
 		}
 
 		throw redirect(303, oauth.url);
-	},
-
-	signout: async ({ locals }) => {
-		await signOut({ supabase: locals.supabase });
-		throw redirect(303, '/login');
 	}
 };

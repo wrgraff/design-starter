@@ -2,7 +2,7 @@
 
 > {{PROJECT_DESCRIPTION}}
 
-Built from **svelte-pwa-template** — a SvelteKit + Supabase template designed for **AI-agent-driven development** with strict feature isolation, a token-driven design system, and a workflow for porting prototypes from Claude Design / Figma Make / Lovable.
+Built from **design-starter** — a SvelteKit + Supabase template designed for **AI-agent-driven development** with strict feature isolation, a token-driven design system, and a workflow for porting prototypes from Claude Design / Figma Make / Lovable.
 
 ## Rules
 

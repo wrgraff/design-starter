@@ -319,6 +319,8 @@ async function configureContent({
 			content = content.replaceAll(key, value);
 		}
 		content = content.replaceAll('design-starter', projectName);
+		// Belt-and-suspenders: erase any leftover template origin traces
+		content = content.replaceAll('svelte-pwa-template', projectName);
 		await writeText(file, content);
 	}
 
@@ -402,6 +404,7 @@ async function configureContent({
 		await rm(path.join(rootDir, 'src/lib/auth'), { recursive: true, force: true });
 		await rm(path.join(rootDir, 'src/lib/features/auth'), { recursive: true, force: true });
 		await rm(path.join(rootDir, 'src/routes/(auth)'), { recursive: true, force: true });
+		await rm(path.join(rootDir, 'src/routes/signout'), { recursive: true, force: true });
 		await rm(path.join(rootDir, 'docs/AUTH.md'), { force: true });
 
 		let hooks = await readText('src/hooks.server.ts');
