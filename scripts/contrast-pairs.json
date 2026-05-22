@@ -1,0 +1,13 @@
+[
+	{ "fg": "foreground", "bg": "background", "min": 4.5, "context": "body text" },
+	{ "fg": "primary-foreground", "bg": "primary", "min": 4.5, "context": "primary button" },
+	{ "fg": "secondary-foreground", "bg": "secondary", "min": 4.5, "context": "secondary button" },
+	{
+		"fg": "destructive-foreground",
+		"bg": "destructive",
+		"min": 4.5,
+		"context": "destructive button"
+	},
+	{ "fg": "muted-foreground", "bg": "background", "min": 4.5, "context": "muted text" },
+	{ "fg": "card-foreground", "bg": "card", "min": 4.5, "context": "card text" }
+]
