@@ -22,10 +22,11 @@
 		<h1 class="text-3xl font-semibold tracking-tight">design-starter</h1>
 		<p class="text-muted-foreground text-sm">
 			Fresh install. Replace this with your actual landing page or first feature. See <code
-				class="bg-muted rounded px-1.5 py-0.5 text-xs">AGENTS.md</code
+				class="bg-muted text-foreground rounded px-1.5 py-0.5 text-xs">AGENTS.md</code
 			>
 			and
-			<code class="bg-muted rounded px-1.5 py-0.5 text-xs">docs/</code> for what to do next.
+			<code class="bg-muted text-foreground rounded px-1.5 py-0.5 text-xs">docs/</code> for what to do
+			next.
 		</p>
 	</header>
 
