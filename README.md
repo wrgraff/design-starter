@@ -54,6 +54,7 @@ pnpm dev                   # http://localhost:5173
    supabase login
    supabase link --project-ref <ref>
    pnpm db:push             # apply all migrations to the hosted DB
+   pnpm db:seed             # create dev user (hi@arturtrifonov.com / devTe5tPass)
    pnpm db:types:linked     # regenerate TypeScript types
    ```
 
@@ -87,6 +88,7 @@ pnpm exec playwright install chromium
 - `pnpm test:all` — full suite
 - `pnpm tokens:check-contrast` — WCAG contrast checks for design tokens
 - `pnpm db:push` — push migrations to hosted Supabase
+- `pnpm db:seed` — create/reset the dev user (requires `SUPABASE_SERVICE_ROLE_KEY` in `.env`)
 - `pnpm db:migration:new <name>` — create a new migration file
 - `pnpm db:diff` — diff local schema vs hosted
 - `pnpm db:types:linked` — regenerate `src/lib/types/database.types.ts` from linked project

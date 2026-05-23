@@ -25,6 +25,7 @@
 		"test:e2e": "playwright test",
 		"test:all": "pnpm test && pnpm test:e2e",
 		"db:push": "supabase db push",
+		"db:seed": "node --env-file=.env scripts/seed-dev-user.mjs",
 		"db:types:linked": "supabase gen types typescript --linked > src/lib/types/database.types.ts",
 		"db:migration:new": "supabase migration new",
 		"db:diff": "supabase db diff",

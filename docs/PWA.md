@@ -19,7 +19,7 @@ The single config lives in `vite.config.ts`, in the `SvelteKitPWA({ ... })` plug
 - `manifest.icons` — paths to the icon files in `static/icons/`.
 - `workbox.navigateFallbackDenylist` — paths that should never serve the cached shell (e.g. API routes — already excluded).
 
-When `pnpm init-project` runs, it fills name/description/theme_color from your answers.
+When `pnpm init-project` runs, it fills `name` and `description` from your answers. Update `theme_color` manually in `vite.config.ts` to match your brand color.
 
 ## Icons
 

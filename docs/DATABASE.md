@@ -101,10 +101,10 @@ Forbidden: disabling RLS on a table to "fix" a permission issue. Fix the policy,
 
 ## Generated Types
 
-`src/lib/types/database.types.ts` is generated from the local DB schema by:
+`src/lib/types/database.types.ts` is generated from the linked hosted project by:
 
 ```bash
-pnpm db:types
+pnpm db:types:linked
 ```
 
 This produces a fully-typed `Database` interface used by both clients:
@@ -120,9 +120,7 @@ const supabase = createClient<Database>(url, key);
 
 **Do not edit `database.types.ts` by hand.** Regenerate after every migration.
 
-The file is committed to the repo so that fresh clones and CI builds have IntelliSense and type-checking immediately, without first running `pnpm db:start`. The downside is noisy diffs on every schema change — accept those as the price.
-
-If you prefer to gitignore the file for a given project, add `src/lib/types/database.types.ts` to `.gitignore` and have your CI run `pnpm db:start && pnpm db:types` before `pnpm check`.
+The file is committed to the repo so that fresh clones and CI builds have IntelliSense and type-checking immediately. The downside is noisy diffs on every schema change — accept those as the price.
 
 ## Browser vs Server Clients
 
@@ -178,12 +176,11 @@ Only imported from files under `src/lib/server/` or routes that already are serv
 
 ## Seeding
 
-Local seed lives in `supabase/seed.sql`. Runs automatically on `pnpm db:reset`.
+`supabase/seed.sql` holds dev fixtures. Run them via the Supabase Studio SQL editor (Dashboard → SQL Editor) — seeds are not pushed by the CLI.
 
-For idempotent dev fixtures:
+For idempotent fixtures:
 
 ```sql
--- supabase/seed.sql
 INSERT INTO notes (id, user_id, title, body) VALUES
   ('00000000-0000-0000-0000-000000000001',
    '00000000-0000-0000-0000-000000000000',
@@ -191,8 +188,6 @@ INSERT INTO notes (id, user_id, title, body) VALUES
    'This is a seeded note.')
 ON CONFLICT (id) DO NOTHING;
 ```
-
-For seeding hosted dev/staging, run the SQL via the Supabase Studio SQL editor — seeds are not pushed by the CLI.
 
 ## Realtime
 

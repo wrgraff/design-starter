@@ -77,13 +77,12 @@ We chose Supabase over Postgres + ORM + auth + storage + realtime + cron, becaus
 The downsides are:
 
 - You are coupled to Supabase's choices (e.g. RLS as the only authorization mechanism on the wire).
-- You need Docker for the best local experience.
 
 The upsides:
 
 - Migrations are normal SQL files, committed to the repo. If you ever leave Supabase, you take your schema with you.
 - Auth, RLS, storage, realtime — none of which we have to implement.
-- Local dev experience is good (Supabase CLI + Docker).
+- Hosted project — no local Docker required. Schema changes are pushed via `pnpm db:push`.
 
 Details in [`DATABASE.md`](./DATABASE.md).
 

@@ -44,7 +44,7 @@ git fetch template
 git checkout template/main -- src/lib/features/auth src/lib/auth src/routes/\(auth\) docs/AUTH.md
 
 # Wire it up: add the env vars to .env.example and your .env
-# Re-run pnpm db:migrate if your template version includes auth-specific migrations
+# Re-run pnpm db:push if your template version includes auth-specific migrations
 # Re-run pnpm install if deps changed between versions
 ```
 
@@ -74,13 +74,9 @@ Disabling a provider hides it from the login UI. The provider also needs to be e
 2. Copy client ID and secret into Supabase Dashboard → Authentication → Providers → Google.
 3. Enable Google in `src/lib/auth/providers.ts`.
 
-Local development uses the same flow — Supabase local Studio (port 54323) has the same provider config UI.
-
 ### Magic links and email
 
-For local development, magic link emails are visible in the local Mailpit UI at <http://127.0.0.1:54324>. No real email is sent.
-
-For production, configure SMTP in Supabase Dashboard → Authentication → SMTP Settings. Recommended: Resend, Postmark, or AWS SES.
+Configure SMTP in Supabase Dashboard → Authentication → SMTP Settings. Recommended: Resend, Postmark, or AWS SES.
 
 ### Admin role
 

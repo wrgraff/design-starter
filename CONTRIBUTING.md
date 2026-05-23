@@ -9,40 +9,14 @@ This repository is primarily developed by delegating tasks to AI agents (Claude 
 3. No hardcoded visual values. Tokens only — see [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md).
 4. A11y baseline is mandatory — see [`docs/A11Y.md`](./docs/A11Y.md).
 5. Database changes via migrations only — see [`docs/DATABASE.md`](./docs/DATABASE.md).
-6. Before PR: run `pnpm format:check && pnpm check && pnpm lint && pnpm test && pnpm test:a11y:full && pnpm tokens:check-contrast`. Lefthook additionally enforces commit/push gates automatically.
 
-## Commit messages
+## Workflow
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Push directly to `main`. No branch or PR conventions required for pet-project use.
 
-```
-<type>(<scope>): <subject>
+Pre-push hooks run `pnpm check` (types) and `pnpm test` automatically via Lefthook.
 
-[optional body]
-
-[optional footer]
-```
-
-Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`, `build`, `ci`, `style`, `revert`.
-
-Scope is usually a feature folder name (`song-list`, `auth`, `pwa`) or an area (`docs`, `ci`, `deps`).
-
-Examples:
-
-- `feat(song-list): add tag filter`
-- `fix(auth): handle expired session token`
-- `docs(a11y): clarify focus order rules`
-- `chore(deps): bump @sveltejs/kit`
-
-Lefthook's `commit-msg` hook enforces this format.
-
-## Branches and PRs
-
-- Branch from `main`.
-- Branch name: `<type>/<short-description>` (e.g. `feat/song-list-filters`).
-- Open a PR against `main`. Keep PRs small and focused — one feature change per PR if possible.
-- The PR description should answer: _what changed, why, what to look at._
-- The pre-merge checklist in `AGENTS.md` is the review checklist.
+> If this project grows into something production-grade: add branch protection, PR reviews, Conventional Commits, and a staging environment. The template is already structured for it — it's a process decision, not an architecture one.
 
 ## Local setup
 
@@ -50,4 +24,4 @@ See [`README.md`](./README.md) → _Quick Start_.
 
 ## Documentation
 
-See [`docs/CONVENTIONS.md`](./docs/CONVENTIONS.md) for naming, file structure, and other repository conventions.
+See [`docs/CONVENTIONS.md`](./docs/CONVENTIONS.md) for file naming and other repository conventions.

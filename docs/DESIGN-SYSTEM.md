@@ -198,11 +198,9 @@ Then use the token by its Tailwind utility (`bg-tag-personal`, `text-tag-persona
 
 ## Brand Color
 
-A project usually has a brand color that drives `--color-primary` and a handful of accents. The `pnpm init-project` script asks for a base color and writes a sensible starting palette into `app.css`.
+A project usually has a brand color that drives `--color-primary` and a handful of accents. Edit `--color-primary` (and its foreground) in both the `@theme` block and the `.dark` block in `src/app.css`. Tokens reference Tailwind palette variables — e.g. `var(--color-violet-700)` for light, `var(--color-violet-400)` for dark.
 
-To change it later, edit the `--color-primary` (and any derived tokens) in both the `@theme` block and the `.dark` block, and verify contrast.
-
-For accent palettes, prefer OKLCH-based generation over manual tinkering — small lightness/chroma steps from a single hue give visually consistent ramps. The `init-project` script does this; for manual updates, [oklch.com](https://oklch.com) is a useful playground.
+For accent palettes, [oklch.com](https://oklch.com) is a useful playground for picking perceptually consistent steps.
 
 ## Typography in Practice
 

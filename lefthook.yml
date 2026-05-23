@@ -19,21 +19,6 @@ pre-commit:
           exit 1
         fi
 
-commit-msg:
-  commands:
-    conventional:
-      run: |
-        msg_file="{1}"
-        if [ -z "$msg_file" ] || [ ! -f "$msg_file" ]; then
-          echo "❌ Commit message file is missing."
-          exit 1
-        fi
-        head -n1 "$msg_file" | grep -qE '^(feat|fix|chore|docs|refactor|test|perf|build|ci|style|revert)(\([a-z0-9-]+\))?: .+' || {
-          echo "❌ Commit message must follow Conventional Commits."
-          echo "   Example: feat(song-list): add filter by tag"
-          exit 1
-        }
-
 pre-push:
   parallel: false
   commands:
@@ -41,5 +26,3 @@ pre-push:
       run: pnpm check
     test:
       run: pnpm test
-    build:
-      run: pnpm build

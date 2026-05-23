@@ -11,15 +11,6 @@ const currentYear = new Date().getFullYear();
 
 const kebabCasePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-function clamp(value, min, max) {
-	return Math.min(max, Math.max(min, value));
-}
-
-function round(value, digits = 3) {
-	const factor = 10 ** digits;
-	return Math.round(value * factor) / factor;
-}
-
 function ensureFileExists(relativePath) {
 	const absolutePath = path.join(rootDir, relativePath);
 	if (!existsSync(absolutePath)) {
@@ -36,218 +27,8 @@ async function writeText(relativePath, content) {
 	await writeFile(path.join(rootDir, relativePath), content, 'utf8');
 }
 
-function normalizeHex(value) {
-	const raw = value.trim().toLowerCase();
-	if (!raw.startsWith('#')) {
-		return null;
-	}
-
-	const hex = raw.slice(1);
-	if (!/^[0-9a-f]{3}$|^[0-9a-f]{6}$/.test(hex)) {
-		return null;
-	}
-
-	if (hex.length === 3) {
-		const expanded = hex
-			.split('')
-			.map((char) => char + char)
-			.join('');
-		return `#${expanded}`;
-	}
-
-	return `#${hex}`;
-}
-
-function hexToSrgb(hex) {
-	const normalized = normalizeHex(hex);
-	if (!normalized) {
-		throw new Error(`Invalid hex color: ${hex}`);
-	}
-
-	const value = normalized.slice(1);
-	return {
-		r: Number.parseInt(value.slice(0, 2), 16) / 255,
-		g: Number.parseInt(value.slice(2, 4), 16) / 255,
-		b: Number.parseInt(value.slice(4, 6), 16) / 255
-	};
-}
-
-function srgbToLinear(channel) {
-	return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-}
-
-function linearToSrgb(channel) {
-	return channel <= 0.0031308 ? 12.92 * channel : 1.055 * channel ** (1 / 2.4) - 0.055;
-}
-
-function srgbToOklch({ r, g, b }) {
-	const lr = srgbToLinear(r);
-	const lg = srgbToLinear(g);
-	const lb = srgbToLinear(b);
-
-	const l = 0.412_221_470_8 * lr + 0.536_332_536_3 * lg + 0.051_445_992_9 * lb;
-	const m = 0.211_903_498_2 * lr + 0.680_699_545_1 * lg + 0.107_396_956_6 * lb;
-	const s = 0.088_302_461_9 * lr + 0.281_718_837_6 * lg + 0.629_978_700_5 * lb;
-
-	const lRoot = Math.cbrt(l);
-	const mRoot = Math.cbrt(m);
-	const sRoot = Math.cbrt(s);
-
-	const lLab = 0.210_454_255_3 * lRoot + 0.793_617_785 * mRoot - 0.004_072_046_8 * sRoot;
-	const aLab = 1.977_998_495_1 * lRoot - 2.428_592_205 * mRoot + 0.450_593_709_9 * sRoot;
-	const bLab = 0.025_904_037_1 * lRoot + 0.782_771_766_2 * mRoot - 0.808_675_766 * sRoot;
-
-	const c = Math.sqrt(aLab * aLab + bLab * bLab);
-	const h = ((Math.atan2(bLab, aLab) * 180) / Math.PI + 360) % 360;
-
-	return { l: lLab, c, h };
-}
-
-function oklchToHex({ l, c, h }) {
-	const hRad = (h * Math.PI) / 180;
-	const aLab = c * Math.cos(hRad);
-	const bLab = c * Math.sin(hRad);
-
-	const lRoot = l + 0.396_337_777_4 * aLab + 0.215_803_757_3 * bLab;
-	const mRoot = l - 0.105_561_345_8 * aLab - 0.063_854_172_8 * bLab;
-	const sRoot = l - 0.089_484_177_5 * aLab - 1.291_485_548 * bLab;
-
-	const lLin = lRoot ** 3;
-	const mLin = mRoot ** 3;
-	const sLin = sRoot ** 3;
-
-	const rLin = 4.076_741_662_1 * lLin - 3.307_711_591_3 * mLin + 0.230_969_929_2 * sLin;
-	const gLin = -1.268_438_004_6 * lLin + 2.609_757_401_1 * mLin - 0.341_319_396_5 * sLin;
-	const bLin = -0.004_196_086_3 * lLin - 0.703_418_614_7 * mLin + 1.707_614_701 * sLin;
-
-	const r = clamp(linearToSrgb(rLin), 0, 1);
-	const g = clamp(linearToSrgb(gLin), 0, 1);
-	const b = clamp(linearToSrgb(bLin), 0, 1);
-
-	const toHex = (value) =>
-		Math.round(value * 255)
-			.toString(16)
-			.padStart(2, '0');
-	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
-
-function formatOklch(color) {
-	return `oklch(${round(color.l, 3)} ${round(color.c, 3)} ${round(color.h, 3)})`;
-}
-
-function parseOklch(input) {
-	const match = input
-		.trim()
-		.match(
-			/^oklch\(\s*([0-9]*\.?[0-9]+%?)\s+([0-9]*\.?[0-9]+)\s+(-?[0-9]*\.?[0-9]+)(?:\s*\/\s*[0-9]*\.?[0-9]+)?\s*\)$/i
-		);
-
-	if (!match) {
-		return null;
-	}
-
-	const lightnessRaw = match[1];
-	const lightness = lightnessRaw.endsWith('%')
-		? Number.parseFloat(lightnessRaw) / 100
-		: Number.parseFloat(lightnessRaw);
-	const chroma = Number.parseFloat(match[2]);
-	const hue = Number.parseFloat(match[3]);
-
-	if (
-		Number.isNaN(lightness) ||
-		Number.isNaN(chroma) ||
-		Number.isNaN(hue) ||
-		lightness < 0 ||
-		lightness > 1 ||
-		chroma < 0
-	) {
-		return null;
-	}
-
-	return { l: lightness, c: chroma, h: ((hue % 360) + 360) % 360 };
-}
-
-function deriveDarkPrimary(lightPrimary) {
-	return {
-		l: clamp(Math.max(0.72, lightPrimary.l + 0.2), 0.72, 0.9),
-		c: clamp(lightPrimary.c * 0.75, 0, 0.19),
-		h: lightPrimary.h
-	};
-}
-
-function parseBrandColor(input) {
-	const value = input.trim();
-	if (!value) {
-		return null;
-	}
-
-	const hex = normalizeHex(value);
-	if (hex) {
-		const lightPrimary = srgbToOklch(hexToSrgb(hex));
-		const darkPrimary = deriveDarkPrimary(lightPrimary);
-		return {
-			lightPrimary,
-			darkPrimary,
-			themeHex: hex
-		};
-	}
-
-	const oklch = parseOklch(value);
-	if (oklch) {
-		const darkPrimary = deriveDarkPrimary(oklch);
-		return {
-			lightPrimary: oklch,
-			darkPrimary,
-			themeHex: oklchToHex(oklch)
-		};
-	}
-
-	return null;
-}
-
 function escapeSingleQuotes(value) {
 	return value.replaceAll('\\', '\\\\').replaceAll("'", "\\'");
-}
-
-function replaceInBlock(fileContent, blockStart, variableName, value) {
-	const startIndex = fileContent.indexOf(blockStart);
-	if (startIndex === -1) {
-		throw new Error(`Cannot find block start: ${blockStart}`);
-	}
-
-	const openingBraceIndex = fileContent.indexOf('{', startIndex);
-	if (openingBraceIndex === -1) {
-		throw new Error(`Cannot find opening brace for block: ${blockStart}`);
-	}
-
-	let depth = 0;
-	let closingBraceIndex = -1;
-	for (let index = openingBraceIndex; index < fileContent.length; index += 1) {
-		if (fileContent[index] === '{') {
-			depth += 1;
-		} else if (fileContent[index] === '}') {
-			depth -= 1;
-			if (depth === 0) {
-				closingBraceIndex = index;
-				break;
-			}
-		}
-	}
-
-	if (closingBraceIndex === -1) {
-		throw new Error(`Cannot find closing brace for block: ${blockStart}`);
-	}
-
-	const block = fileContent.slice(openingBraceIndex, closingBraceIndex + 1);
-	const variablePattern = new RegExp(`(--${variableName}:\\s*)[^;]+;`);
-	if (!variablePattern.test(block)) {
-		throw new Error(`Cannot find CSS variable --${variableName}`);
-	}
-
-	const nextBlock = block.replace(variablePattern, `$1${value};`);
-	return (
-		fileContent.slice(0, openingBraceIndex) + nextBlock + fileContent.slice(closingBraceIndex + 1)
-	);
 }
 
 function removeBetween(content, startMarker, endMarker, replacement = '') {
@@ -301,9 +82,7 @@ async function configureContent({
 	repoUrl,
 	author,
 	year,
-	keepAuth,
-	supabaseMode,
-	brand
+	keepAuth
 }) {
 	const replacements = new Map([
 		['{{PROJECT_NAME}}', projectName],
@@ -345,18 +124,7 @@ async function configureContent({
 	viteConfig = viteConfig.replace(/(name:\s*')[^']*(')/, `$1${escapedName}$2`);
 	viteConfig = viteConfig.replace(/(short_name:\s*')[^']*(')/, `$1${escapedName}$2`);
 	viteConfig = viteConfig.replace(/(description:\s*')[^']*(')/, `$1${escapedDescription}$2`);
-	viteConfig = viteConfig.replace(
-		/(theme_color:\s*')[^']*(')/,
-		`$1${brand ? brand.themeHex : '#0a0a0a'}$2`
-	);
 	await writeText('vite.config.ts', viteConfig);
-
-	let appCss = await readText('src/app.css');
-	if (brand) {
-		appCss = replaceInBlock(appCss, '@theme', 'color-primary', formatOklch(brand.lightPrimary));
-		appCss = replaceInBlock(appCss, '.dark', 'color-primary', formatOklch(brand.darkPrimary));
-	}
-	await writeText('src/app.css', appCss);
 
 	let homePage = await readText('src/routes/+page.svelte');
 	homePage = homePage.replaceAll('design-starter', projectName);
@@ -369,25 +137,14 @@ async function configureContent({
 	}
 
 	let envExample = await readText('.env.example');
-	if (supabaseMode === 'remote') {
-		envExample = envExample.replace(
-			/PUBLIC_SUPABASE_URL="[^"]*"/,
-			'PUBLIC_SUPABASE_URL="https://your-project-ref.supabase.co"'
-		);
-		envExample = envExample.replace(
-			/PUBLIC_SUPABASE_ANON_KEY="[^"]*"/,
-			'PUBLIC_SUPABASE_ANON_KEY="your-production-anon-key-here"'
-		);
-	} else {
-		envExample = envExample.replace(
-			/PUBLIC_SUPABASE_URL="[^"]*"/,
-			'PUBLIC_SUPABASE_URL="http://127.0.0.1:54321"'
-		);
-		envExample = envExample.replace(
-			/PUBLIC_SUPABASE_ANON_KEY="[^"]*"/,
-			'PUBLIC_SUPABASE_ANON_KEY="your-anon-key-here"'
-		);
-	}
+	envExample = envExample.replace(
+		/PUBLIC_SUPABASE_URL="[^"]*"/,
+		'PUBLIC_SUPABASE_URL="https://your-project-ref.supabase.co"'
+	);
+	envExample = envExample.replace(
+		/PUBLIC_SUPABASE_ANON_KEY="[^"]*"/,
+		'PUBLIC_SUPABASE_ANON_KEY="your-anon-key-here"'
+	);
 
 	if (!keepAuth) {
 		envExample = removeBetween(
@@ -478,28 +235,6 @@ async function main() {
 		});
 		const keepAuth = parseYesNo(keepAuthRaw);
 
-		const supabaseMode = await askQuestion(rl, 'Supabase mode (local/remote)', {
-			defaultValue: 'local',
-			validate: (value) =>
-				['local', 'remote'].includes(value.toLowerCase()) || 'Enter local or remote.'
-		});
-
-		const brandRaw = await askQuestion(
-			rl,
-			'Base brand color (hex or OKLCH, blank to keep neutral)',
-			{
-				defaultValue: ''
-			}
-		);
-
-		let brand = null;
-		if (brandRaw.trim()) {
-			brand = parseBrandColor(brandRaw);
-			if (!brand) {
-				throw new Error('Brand color is invalid. Use #RRGGBB, #RGB, or oklch(L C H).');
-			}
-		}
-
 		const author = await askQuestion(rl, 'Author name', {
 			validate: (value) => value.trim().length > 0 || 'Author name is required.'
 		});
@@ -509,27 +244,19 @@ async function main() {
 		});
 		const year = Number.parseInt(yearRaw, 10);
 
-		await configureContent({
-			projectName,
-			projectDescription,
-			repoUrl,
-			author,
-			year,
-			keepAuth,
-			supabaseMode: supabaseMode.toLowerCase(),
-			brand
-		});
+		await configureContent({ projectName, projectDescription, repoUrl, author, year, keepAuth });
 
 		// Last step: remove this one-shot initializer.
 		await rm(path.join(rootDir, 'scripts/init-project.mjs'), { force: true });
 
 		console.log('\nProject initialized.\n');
 		console.log('Next steps:');
-		console.log('1. pnpm install');
-		console.log('2. cp .env.example .env');
-		console.log(`3. Configure .env values (${supabaseMode.toLowerCase()} Supabase selected).`);
-		console.log('4. pnpm check && pnpm lint && pnpm test && pnpm build');
-		console.log('5. Commit the initialized project.');
+		console.log('1. cp .env.example .env');
+		console.log(
+			'2. Fill in PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY from Supabase Dashboard.'
+		);
+		console.log('3. pnpm check && pnpm lint && pnpm test && pnpm build');
+		console.log('4. Commit the initialized project.');
 	} finally {
 		rl.close();
 	}
