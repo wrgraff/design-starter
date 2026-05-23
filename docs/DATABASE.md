@@ -4,54 +4,27 @@ This project uses **Supabase** (Postgres + Auth + Storage + Realtime). This docu
 
 For the _why_, see [`ARCHITECTURE.md`](./ARCHITECTURE.md) → _Why Supabase_. For _the rules_, see [`../AGENTS.md`](../AGENTS.md) → _Database Rules_.
 
-## Local vs Hosted
+## Setup
 
-- **Local Supabase** runs in Docker via the Supabase CLI. Same Postgres, same auth flows, same storage — entirely on your machine.
-- **Hosted Supabase** is a project at <https://supabase.com>. Used for staging and production.
+This project uses a **hosted Supabase project** — no local Docker required. Migrations live in `supabase/migrations/` as plain SQL files committed to the repo, and are pushed to the hosted DB via the CLI.
 
-Migrations are the bridge: they live in `supabase/migrations/` as plain SQL files, committed to the repo, and applied identically to local and hosted databases.
+### First-time
 
-## First-time Setup
-
-### Local
-
-```bash
-# Install Supabase CLI (macOS / Linux / Windows — see https://supabase.com/docs/guides/local-development/cli/getting-started)
-brew install supabase/tap/supabase
-
-# Start Docker Desktop, then:
-pnpm db:start
-
-# Apply migrations + generate types
-pnpm db:migrate
-pnpm db:types
-
-# Get local URL and anon key for your .env
-pnpm db:status
-```
-
-Copy `SUPABASE_URL` and `anon key` from the output into `.env`:
-
-```env
-PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-PUBLIC_SUPABASE_ANON_KEY=<paste anon key>
-```
-
-### Hosted (for staging / production)
-
-1. Create a new project at <https://supabase.com>.
-2. Get the URL and anon key from Project Settings → API.
-3. Set them as environment variables on the deploy target (Netlify dashboard, not in `.env`).
-4. Link the CLI to the hosted project once:
+1. Create a project at <https://supabase.com> → **New project**.
+2. Project Settings → API → copy **Project URL** and **anon public** key into `.env`:
+   ```env
+   PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+   PUBLIC_SUPABASE_ANON_KEY=<anon-key>
+   ```
+3. Link the CLI and push the schema:
    ```bash
+   supabase login
    supabase link --project-ref <your-project-ref>
-   ```
-5. Push migrations:
-   ```bash
-   supabase db push
+   pnpm db:push           # apply all migrations to the hosted DB
+   pnpm db:types:linked   # regenerate src/lib/types/database.types.ts
    ```
 
-See [`DEPLOY.md`](./DEPLOY.md) for the full production setup.
+For production/Netlify env vars see [`DEPLOY.md`](./DEPLOY.md).
 
 ## Daily Workflow
 
@@ -64,23 +37,15 @@ pnpm db:migration:new add_songs_table
 # Edit the new file — write CREATE TABLE / ALTER TABLE / etc.
 # Always add RLS policies in the same migration.
 
-pnpm db:migrate          # apply to local DB
-pnpm db:types            # regenerate src/lib/types/database.types.ts
+pnpm db:push             # apply to hosted DB
+pnpm db:types:linked     # regenerate src/lib/types/database.types.ts
 ```
 
 Commit both the migration file and the regenerated types file.
 
-### Reset local DB
-
-```bash
-pnpm db:reset
-```
-
-Drops the local DB, re-applies all migrations, runs `supabase/seed.sql`. Use this when local state is messy or after pulling new migrations.
-
 ### Inspect the schema
 
-Local Supabase Studio runs at <http://127.0.0.1:54323> after `pnpm db:start`. SQL editor, table editor, auth UI — all local.
+Supabase Studio: <https://supabase.com/dashboard> → your project → Table Editor / SQL Editor.
 
 ## Row Level Security (RLS)
 
@@ -260,10 +225,9 @@ For uploads, prefer server-side signed URLs over direct browser uploads — give
 
 | Symptom                                                                       | Likely cause                                                                              |
 | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `relation "X" does not exist`                                                 | Migration not applied. Run `pnpm db:migrate` (local) or `supabase db push` (hosted).      |
+| `relation "X" does not exist`                                                 | Migration not applied. Run `pnpm db:push`.                                                |
 | `new row violates row-level security policy`                                  | Missing or incorrect RLS policy. Check the policy against the operation.                  |
-| Types out of date / `Property 'foo' does not exist on type` after a migration | Regenerate: `pnpm db:types`.                                                              |
+| Types out of date / `Property 'foo' does not exist on type` after a migration | Regenerate: `pnpm db:types:linked`.                                                       |
 | Anon key works but inserts silently return empty data                         | RLS policy returning no rows from `SELECT` after insert — see `auth.uid()` in the policy. |
-| Local Supabase won't start                                                    | Docker not running, or port conflict. Try `pnpm db:stop && pnpm db:start`.                |
 
 For Supabase-specific docs: <https://supabase.com/docs>.

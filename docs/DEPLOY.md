@@ -96,12 +96,11 @@ Don't forget to update Supabase **Site URL** and any OAuth redirect URLs to the 
 After committing a new migration:
 
 ```bash
-# Locally — apply and regenerate types
-pnpm db:migrate
-pnpm db:types
-
 # Push to hosted DB BEFORE deploying the code that depends on it
-supabase db push
+pnpm db:push
+
+# Regenerate types
+pnpm db:types:linked
 ```
 
 Order matters: deploy a code change that expects a new column before applying the migration → users hit errors. Apply the migration first.

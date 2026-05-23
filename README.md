@@ -33,16 +33,38 @@ UI primitive contracts in:
 
 ## Quick Start
 
-Prerequisites: Node.js 20+, pnpm 9+, Docker (for local Supabase), Supabase CLI.
+Prerequisites: Node.js 22+, pnpm 9+, Supabase CLI.
 
 ```bash
 pnpm install
-cp .env.example .env       # fill in values
-pnpm db:start              # local Supabase (Docker)
-pnpm db:migrate            # apply migrations
-pnpm db:types              # generate TS types
+cp .env.example .env       # fill in Supabase URL and keys (see below)
 pnpm dev                   # http://localhost:5173
 ```
+
+### First-time: create and connect the database
+
+1. Create a project at <https://supabase.com> → **New project**.
+2. Project Settings → API → copy **Project URL** and **anon public** key into `.env`:
+   ```env
+   PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+   PUBLIC_SUPABASE_ANON_KEY=<anon-key>
+   ```
+3. Link the CLI and push the schema:
+   ```bash
+   supabase login
+   supabase link --project-ref <ref>
+   pnpm db:push             # apply all migrations to the hosted DB
+   pnpm db:types:linked     # regenerate TypeScript types
+   ```
+
+### Deploy to Netlify
+
+See [`docs/DEPLOY.md`](./docs/DEPLOY.md) for the full guide. Short version:
+
+1. Netlify → **Add new site** → import the repo.
+2. Add env vars in Netlify → Site configuration → Environment variables  
+   (`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `PUBLIC_APP_URL`).
+3. Trigger a deploy — done.
 
 For Playwright E2E/a11y runs (first time on a machine), install browsers once:
 
@@ -64,11 +86,10 @@ pnpm exec playwright install chromium
 - `pnpm test:a11y:full` — strict full-route accessibility suite
 - `pnpm test:all` — full suite
 - `pnpm tokens:check-contrast` — WCAG contrast checks for design tokens
-- `pnpm db:start` / `pnpm db:stop` — local Supabase
-- `pnpm db:migration:new <name>` — new migration
-- `pnpm db:migrate` — apply migrations
-- `pnpm db:reset` — reset local DB
-- `pnpm db:types` — regenerate `src/lib/types/database.types.ts`
+- `pnpm db:push` — push migrations to hosted Supabase
+- `pnpm db:migration:new <name>` — create a new migration file
+- `pnpm db:diff` — diff local schema vs hosted
+- `pnpm db:types:linked` — regenerate `src/lib/types/database.types.ts` from linked project
 - `pnpm init-project` — initialize this template for a new project (one-time)
 
 ## Project Structure
