@@ -237,13 +237,52 @@ function contrastRatio(foreground, background) {
 	return (lighter + 0.05) / (darker + 0.05);
 }
 
+// Tailwind v4 default palette — oklch values for colors used in app.css tokens.
+// Required because tokens now reference var(--color-zinc-*) etc. instead of raw oklch.
+const TAILWIND_PALETTE = new Map([
+	['white', 'oklch(1 0 0)'],
+	['black', 'oklch(0 0 0)'],
+	['zinc-50', 'oklch(0.985 0.002 247.858)'],
+	['zinc-100', 'oklch(0.967 0.001 286.375)'],
+	['zinc-200', 'oklch(0.92 0.004 286.286)'],
+	['zinc-300', 'oklch(0.871 0.006 286.286)'],
+	['zinc-400', 'oklch(0.705 0.015 286.375)'],
+	['zinc-500', 'oklch(0.552 0.016 285.938)'],
+	['zinc-600', 'oklch(0.442 0.017 285.786)'],
+	['zinc-700', 'oklch(0.37 0.013 285.805)'],
+	['zinc-800', 'oklch(0.274 0.006 286.033)'],
+	['zinc-900', 'oklch(0.21 0.006 285.885)'],
+	['zinc-950', 'oklch(0.141 0.005 285.823)'],
+	['red-400', 'oklch(0.704 0.191 22.216)'],
+	['red-600', 'oklch(0.577 0.245 27.325)'],
+	['green-500', 'oklch(0.723 0.219 142.495)'],
+	['green-600', 'oklch(0.627 0.194 149.214)'],
+	['amber-400', 'oklch(0.828 0.189 84.429)'],
+	['amber-500', 'oklch(0.769 0.188 70.08)'],
+	['sky-400', 'oklch(0.746 0.16 232.661)'],
+	['sky-600', 'oklch(0.588 0.158 241.966)'],
+]);
+
+function resolveValue(raw) {
+	const varMatch = raw.match(/^var\(--color-([a-z0-9-]+)\)$/i);
+	if (varMatch) {
+		const paletteKey = varMatch[1];
+		const resolved = TAILWIND_PALETTE.get(paletteKey);
+		if (!resolved) {
+			throw new Error(`Unknown Tailwind palette color: --color-${paletteKey}. Add it to TAILWIND_PALETTE in check-contrast.mjs.`);
+		}
+		return resolved;
+	}
+	return raw;
+}
+
 function resolveThemeColor(variables, tokenName) {
 	const fullToken = `color-${tokenName}`;
-	const value = variables.get(fullToken);
-	if (!value) {
+	const raw = variables.get(fullToken);
+	if (!raw) {
 		throw new Error(`Missing token: --${fullToken}`);
 	}
-	return parseColor(value);
+	return parseColor(resolveValue(raw));
 }
 
 function formatRow(columns, widths) {
